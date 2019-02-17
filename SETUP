@@ -1,0 +1,5 @@
+install devkitPRO:
+	`https://devkitpro.org/wiki/Getting_Started`
+
+install emulator:
+	`sudo apt install visualboyadvance`
