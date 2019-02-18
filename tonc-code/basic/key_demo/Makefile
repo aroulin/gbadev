@@ -14,9 +14,17 @@ PATH := $(DEVKITARM)/bin:$(PATH)
 PROJ    := key_demo
 TITLE   := $(PROJ)
 
-COBJS   := key_demo.o toolbox.o gba_pic.o
+COBJS   := gba_pic.o key_demo.o 
 
 OBJS	:= $(COBJS)
+
+LIBTONC	:= ../../tonclib
+
+INCLUDE  := -I$(LIBTONC)/include
+LIBPATHS := -L$(LIBTONC)/lib
+
+LIBS    := -ltonc
+
 
 # --- boot type (MB=0 : normal. MB=1 : multiboot) ---
 
@@ -46,8 +54,8 @@ OBJCOPY	:= $(CROSS)objcopy
 ARCH	:= -mthumb-interwork -mthumb
 
 ASFLAGS	:= -mthumb-interwork
-CFLAGS	:= $(ARCH) -O2 -Wall -fno-strict-aliasing
-LDFLAGS	:= $(ARCH) $(SPECS)
+CFLAGS	:= $(ARCH) $(INCLUDE) -O2 -Wall -fno-strict-aliasing
+LDFLAGS := $(ARCH) $(SPECS) $(LIBPATHS) $(LIBS)
 
 .PHONY : build clean
 
@@ -65,6 +73,9 @@ $(TARGET).elf : $(OBJS)
 
 $(COBJS) : %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+gba_pic.c:
+	grit gba.png -gb -gB8 -ftc -ogba_pic
 	
 # --- Clean -----------------------------------------------------------
 
@@ -72,5 +83,6 @@ clean :
 	@rm -fv *.gba
 	@rm -fv *.elf
 	@rm -fv *.o
+	@rm -fv gba_pic.c gba_pic.h
 
 #EOF

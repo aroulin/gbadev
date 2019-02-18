@@ -7,8 +7,10 @@
 
 #include <string.h>
 
-#include "toolbox.h"
-#include "input.h"
+#include "tonc_input.h"
+#include "tonc_bios.h"
+#include "tonc_irq.h"
+#include "tonc_video.h"
 
 #include "gba_pic.h"
 
@@ -23,6 +25,10 @@ int main()
 	COLOR clr;
 	int frame=0;
 
+	// enable isr switchboard and VBlank interrupt
+	irq_init(NULL);
+	irq_add(II_VBLANK, NULL);
+
 	memcpy(vid_mem, gba_picBitmap, gba_picBitmapLen);
 	memcpy(pal_bg_mem, gba_picPal, gba_picPalLen);
 
@@ -30,7 +36,7 @@ int main()
 
 	while(1)
 	{
-		vid_vsync();
+		VBlankIntrWait();
 		// slowing down polling to make the changes visible
 		if((frame & 7) == 0)
 			key_poll();
