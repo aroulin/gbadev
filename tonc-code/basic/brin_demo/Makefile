@@ -14,7 +14,7 @@ PATH := $(DEVKITARM)/bin:$(PATH)
 PROJ    := brin_demo
 TITLE   := $(PROJ)
 
-COBJS   := $(PROJ).o brin.o toolbox.o
+COBJS   := brin.o toolbox.o $(PROJ).o
 
 OBJS	:= $(COBJS)
 
@@ -65,6 +65,9 @@ $(TARGET).elf : $(OBJS)
 
 $(COBJS) : %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+brin.c:
+	grit brin-full.png -mLs -obrin -ftc -gB4 -mRtpf
 	
 # --- Clean -----------------------------------------------------------
 
@@ -72,5 +75,6 @@ clean :
 	@rm -fv *.gba
 	@rm -fv *.elf
 	@rm -fv *.o
+	@rm -fv brin.c brin.h
 
 #EOF
